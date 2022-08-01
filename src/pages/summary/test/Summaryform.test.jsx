@@ -1,5 +1,6 @@
 import SummaryForm from "../SummaryForm";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 test("checkbox and button initital state", () => {
   render(<SummaryForm />);
@@ -23,9 +24,9 @@ test("only check checkbox, button can be enabled", () => {
   });
   const button = screen.getByRole("button", { name: "Confirm order" });
 
-  fireEvent.click(checkbox);
+  userEvent.click(checkbox);
   expect(button).toBeEnabled();
 
-  fireEvent.click(checkbox);
+  userEvent.click(checkbox);
   expect(button).toBeDisabled();
 });
