@@ -1,5 +1,9 @@
 import SummaryForm from "../SummaryForm";
-import { render, screen } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 test("checkbox and button initital state", () => {
@@ -29,4 +33,29 @@ test("only check checkbox, button can be enabled", () => {
 
   userEvent.click(checkbox);
   expect(button).toBeDisabled();
+});
+
+test("popover only appear when we mouse over the terms and conditions", async () => {
+  //initial state is hidden
+  render(<SummaryForm />);
+  const nullPopover = screen.queryByText(
+    /no ice cream will actually be delivered/i
+  );
+  expect(nullPopover).not.toBeInTheDocument();
+
+  //popover appear when we mouse over on it
+  const terms = screen.getByText(/terms and conditions/i);
+  userEvent.hover(terms);
+
+  const popOver = screen.getByText(/no ice cream will actually be delivered/i);
+  expect(popOver).toBeInTheDocument();
+
+  //popover disappear when we move mouse away
+  //Error: An update to Overlay inside a test was not wrapped in act(...).
+  //how to fix it: need wait the element to be disappear from the dom
+  //https://testing-library.com/docs/guide-disappearance/
+  userEvent.unhover(terms);
+  await waitForElementToBeRemoved(() =>
+    screen.queryByText(/no ice cream will actually be delivered/i)
+  );
 });
