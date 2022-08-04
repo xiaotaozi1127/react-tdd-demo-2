@@ -8,6 +8,7 @@ import AlertBanner from "../common/AlertBanner";
 import { useEffect, useState } from "react";
 import { pricePerItem } from "../../constants";
 import { useOrderDetails } from "../../contexts/OrderDetails";
+import { formatCurrency } from "../../utils";
 
 export default function Options({ optionType }) {
   //useState return array of getter and setter
@@ -45,7 +46,7 @@ export default function Options({ optionType }) {
   return (
     <>
       <h2>{title}</h2>
-      <p>{pricePerItem[optionType]} each</p>
+      <p>{formatCurrency(pricePerItem[optionType])} each</p>
       <p>
         {title} total: {orderDetails.totals[optionType]}
       </p>

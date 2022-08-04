@@ -3,11 +3,12 @@ import {
   screen,
   waitFor,
 } from "../../../test-utils/testing-library-utils";
+import UserEvent from "@testing-library/user-event";
 import OrderEntry from "../OrderEntry";
 import { server } from "../../../mocks/server";
 import { rest } from "msw";
 
-test.only("display alert banner when server response error", async () => {
+test("display alert banner when server response error", async () => {
   server.resetHandlers(
     rest.get("http://localhost:3030/scoops", (req, res, ctx) =>
       res(ctx.status(500))
@@ -23,5 +24,74 @@ test.only("display alert banner when server response error", async () => {
   await waitFor(async () => {
     const alertBanners = await screen.findAllByRole("alert");
     expect(alertBanners).toHaveLength(2);
+  });
+});
+
+describe("grand total test", () => {
+  test.skip("grand total should start at $0.00", async () => {
+    render(<OrderEntry />);
+    const grandTotalLabel = await screen.findByRole("heading", {
+      name: /grand total: \$/i,
+    });
+    expect(grandTotalLabel).toHaveTextContent("0.00");
+  });
+
+  test("display grand total when add scoops first", async () => {
+    render(<OrderEntry />);
+    const grandTotalLabel = screen.getByRole("heading", {
+      name: /grand total: \$/i,
+    });
+    expect(grandTotalLabel).toHaveTextContent("0.00");
+    const vanillaSpinButton = await screen.findByRole("spinbutton", {
+      name: "Vanilla",
+    });
+    UserEvent.clear(vanillaSpinButton);
+    UserEvent.type(vanillaSpinButton, "1");
+
+    const cherriesCheckbox = await screen.findByRole("checkbox", {
+      name: "Cherries",
+    });
+    UserEvent.click(cherriesCheckbox);
+
+    expect(grandTotalLabel).toHaveTextContent("3.50");
+  });
+
+  test("display grand total when add toppings first", async () => {
+    render(<OrderEntry />);
+    const cherriesCheckbox = await screen.findByRole("checkbox", {
+      name: "Cherries",
+    });
+    UserEvent.click(cherriesCheckbox);
+
+    const vanillaSpinButton = await screen.findByRole("spinbutton", {
+      name: "Vanilla",
+    });
+    UserEvent.clear(vanillaSpinButton);
+    UserEvent.type(vanillaSpinButton, "1");
+    const grandTotalLabel = screen.getByRole("heading", {
+      name: /grand total: \$/i,
+    });
+    expect(grandTotalLabel).toHaveTextContent("3.50");
+  });
+
+  test("display grand total when remove one item from scoops", async () => {
+    render(<OrderEntry />);
+    const vanillaSpinButton = await screen.findByRole("spinbutton", {
+      name: "Vanilla",
+    });
+    UserEvent.clear(vanillaSpinButton);
+    UserEvent.type(vanillaSpinButton, "2");
+
+    const cherriesCheckbox = await screen.findByRole("checkbox", {
+      name: "Cherries",
+    });
+    UserEvent.click(cherriesCheckbox);
+    const grandTotalLabel = screen.getByRole("heading", {
+      name: /grand total: \$/i,
+    });
+    expect(grandTotalLabel).toHaveTextContent("5.50");
+    UserEvent.clear(vanillaSpinButton);
+    UserEvent.type(vanillaSpinButton, "1");
+    expect(grandTotalLabel).toHaveTextContent("3.50");
   });
 });
