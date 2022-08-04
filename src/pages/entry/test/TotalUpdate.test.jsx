@@ -3,7 +3,7 @@ import UserEvent from "@testing-library/user-event";
 
 import Options from "../Options";
 
-test("should update subTotal when select number changes", async () => {
+test("should update scoop subTotal when select number changes", async () => {
   render(<Options optionType="scoops" />);
 
   const subTotal = screen.getByText("Scoops total: $", { exact: false });
@@ -22,4 +22,32 @@ test("should update subTotal when select number changes", async () => {
   UserEvent.clear(chocolateSpinButton);
   UserEvent.type(chocolateSpinButton, "2");
   expect(subTotal).toHaveTextContent("6.00");
+});
+
+test("should update topping subtotal when selected checkbox changes", async () => {
+  render(<Options optionType="toppings" />);
+
+  const subTotal = screen.getByText("Toppings total: $", { exact: false });
+  expect(subTotal).toHaveTextContent("0.00");
+
+  const cherriesCheckbox = await screen.findByRole("checkbox", {
+    name: "Cherries",
+  });
+  UserEvent.click(cherriesCheckbox);
+  expect(subTotal).toHaveTextContent("1.50");
+
+  const mandmsCheckbox = await screen.findByRole("checkbox", {
+    name: "M&Ms",
+  });
+  UserEvent.click(mandmsCheckbox);
+  expect(subTotal).toHaveTextContent("3.00");
+
+  const hotfudgeCheckbox = await screen.findByRole("checkbox", {
+    name: "Hot fudge",
+  });
+  UserEvent.click(hotfudgeCheckbox);
+  expect(subTotal).toHaveTextContent("4.50");
+
+  UserEvent.click(mandmsCheckbox);
+  expect(subTotal).toHaveTextContent("3.00");
 });
