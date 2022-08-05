@@ -28,14 +28,6 @@ test("display alert banner when server response error", async () => {
 });
 
 describe("grand total test", () => {
-  test.skip("grand total should start at $0.00", async () => {
-    render(<OrderEntry />);
-    const grandTotalLabel = await screen.findByRole("heading", {
-      name: /grand total: \$/i,
-    });
-    expect(grandTotalLabel).toHaveTextContent("0.00");
-  });
-
   test("display grand total when add scoops first", async () => {
     render(<OrderEntry />);
     const grandTotalLabel = screen.getByRole("heading", {
@@ -94,4 +86,13 @@ describe("grand total test", () => {
     UserEvent.type(vanillaSpinButton, "1");
     expect(grandTotalLabel).toHaveTextContent("3.50");
   });
+});
+
+test("change orderPhase state when click order button", () => {
+  const updateOrderPhase = jest.fn();
+  render(<OrderEntry updateOrderPhase={updateOrderPhase} />);
+
+  const orderButton = screen.getByRole("button", { name: "Order Sundae!" });
+  UserEvent.click(orderButton);
+  expect(updateOrderPhase).toBeCalledWith("review");
 });

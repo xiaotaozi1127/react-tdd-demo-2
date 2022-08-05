@@ -3,11 +3,11 @@ import {
   render,
   screen,
   waitForElementToBeRemoved,
-} from "@testing-library/react";
+} from "../../../test-utils/testing-library-utils";
 import userEvent from "@testing-library/user-event";
 
 test("checkbox and button initital state", () => {
-  render(<SummaryForm />);
+  render(<SummaryForm updateOrderPhase={jest.fn()} />);
 
   const checkbox = screen.getByRole("checkbox", {
     name: "I agree to Terms and Conditions",
@@ -37,7 +37,7 @@ test("only check checkbox, button can be enabled", () => {
 
 test("popover only appear when we mouse over the terms and conditions", async () => {
   //initial state is hidden
-  render(<SummaryForm />);
+  render(<SummaryForm updateOrderPhase={jest.fn()} />);
   const nullPopover = screen.queryByText(
     /no ice cream will actually be delivered/i
   );
@@ -58,4 +58,18 @@ test("popover only appear when we mouse over the terms and conditions", async ()
   await waitForElementToBeRemoved(() =>
     screen.queryByText(/no ice cream will actually be delivered/i)
   );
+});
+
+test("change order phase when click confirm button", () => {
+  //passing a jest mock function as prop
+  const updateOrderPhase = jest.fn();
+  render(<SummaryForm updateOrderPhase={updateOrderPhase} />);
+  const checkbox = screen.getByRole("checkbox", {
+    name: "I agree to Terms and Conditions",
+  });
+  const button = screen.getByRole("button", { name: "Confirm order" });
+
+  userEvent.click(checkbox);
+  userEvent.click(button);
+  expect(updateOrderPhase).toBeCalledWith("completed");
 });
