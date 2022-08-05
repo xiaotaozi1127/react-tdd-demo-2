@@ -88,11 +88,50 @@ describe("grand total test", () => {
   });
 });
 
-test("change orderPhase state when click order button", () => {
+test("change orderPhase state when click order button", async () => {
   const updateOrderPhase = jest.fn();
   render(<OrderEntry updateOrderPhase={updateOrderPhase} />);
+
+  const vanillaSpinButton = await screen.findByRole("spinbutton", {
+    name: "Vanilla",
+  });
+  UserEvent.clear(vanillaSpinButton);
+  UserEvent.type(vanillaSpinButton, "2");
 
   const orderButton = screen.getByRole("button", { name: "Order Sundae!" });
   UserEvent.click(orderButton);
   expect(updateOrderPhase).toBeCalledWith("review");
+});
+
+test("button will be disabled if input scoops number is invalid", async () => {
+  render(<OrderEntry />);
+  const vanillaSpinButton = await screen.findByRole("spinbutton", {
+    name: "Vanilla",
+  });
+  UserEvent.clear(vanillaSpinButton);
+  UserEvent.type(vanillaSpinButton, "2.4");
+  const orderButton = screen.getByRole("button", { name: "Order Sundae!" });
+
+  expect(orderButton).toBeDisabled();
+});
+
+test("button will be disabled if no scoops is selected", async () => {
+  render(<OrderEntry />);
+  const cherriesCheckbox = await screen.findByRole("checkbox", {
+    name: "Cherries",
+  });
+  UserEvent.click(cherriesCheckbox);
+  const orderButton = screen.getByRole("button", { name: "Order Sundae!" });
+  expect(orderButton).toBeDisabled();
+
+  const vanillaSpinButton = await screen.findByRole("spinbutton", {
+    name: "Vanilla",
+  });
+  UserEvent.clear(vanillaSpinButton);
+  UserEvent.type(vanillaSpinButton, "2");
+
+  const orderButtonAgain = screen.getByRole("button", {
+    name: "Order Sundae!",
+  });
+  expect(orderButtonAgain).toBeEnabled();
 });

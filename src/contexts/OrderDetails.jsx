@@ -29,6 +29,7 @@ export function OrderDetailsProvider(props) {
   const [optionCounts, setOptionCounts] = useState({
     scoops: new Map(),
     toppings: new Map(),
+    validInput: true,
   });
 
   const zeroCurrency = formatCurrency(0);
@@ -39,30 +40,42 @@ export function OrderDetailsProvider(props) {
   });
 
   useEffect(() => {
-    const scoopsSubTotal = calculateSubTotal("scoops", optionCounts);
-    const toppingsSubTotal = calculateSubTotal("toppings", optionCounts);
-    const grandTotal = scoopsSubTotal + toppingsSubTotal;
-    setTotals({
-      scoops: formatCurrency(scoopsSubTotal),
-      toppings: formatCurrency(toppingsSubTotal),
-      grandTotal: formatCurrency(grandTotal),
-    });
+    if (optionCounts.validInput) {
+      const scoopsSubTotal = calculateSubTotal("scoops", optionCounts);
+      const toppingsSubTotal = calculateSubTotal("toppings", optionCounts);
+      const grandTotal = scoopsSubTotal + toppingsSubTotal;
+      setTotals({
+        scoops: formatCurrency(scoopsSubTotal),
+        toppings: formatCurrency(toppingsSubTotal),
+        grandTotal: formatCurrency(grandTotal),
+      });
+    }
   }, [optionCounts]);
 
   const value = useMemo(() => {
     function updateItemCount(itemName, newItemCount, optionType) {
-      const newOptionCounts = { ...optionCounts };
+      let integerValue = parseInt(newItemCount);
+      let floatValue = parseFloat(newItemCount);
+      let isValid = integerValue === floatValue && integerValue >= 0;
+      if (isValid) {
+        const newOptionCounts = { ...optionCounts };
 
-      const optionCountsMap = newOptionCounts[optionType];
-      optionCountsMap.set(itemName, parseInt(newItemCount));
-
-      setOptionCounts(newOptionCounts);
+        const optionCountsMap = newOptionCounts[optionType];
+        optionCountsMap.set(itemName, integerValue);
+        newOptionCounts["validInput"] = true;
+        setOptionCounts(newOptionCounts);
+      } else {
+        const newOptionCounts = { ...optionCounts };
+        newOptionCounts["validInput"] = false;
+        setOptionCounts(newOptionCounts);
+      }
     }
 
     function resetOrder() {
       setOptionCounts({
         scoops: new Map(),
         toppings: new Map(),
+        validInput: true,
       });
     }
 
