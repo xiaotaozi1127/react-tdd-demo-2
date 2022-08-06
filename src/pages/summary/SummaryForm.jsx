@@ -40,8 +40,13 @@ export default function SummaryForm({ updateOrderPhase }) {
       <h1>Order Summary</h1>
       <h2>Scoops: {totals.scoops}</h2>
       <ul>{scoopsOptions}</ul>
-      <h2>Toppings: {totals.toppings}</h2>
-      <ul>{toppingsOptions}</ul>
+      {orderDetails.toppings.size > 0 && (
+        <>
+          <h2>Toppings: {totals.toppings}</h2>
+          <ul>{toppingsOptions}</ul>
+        </>
+      )}
+
       <h2>Total: {totals.grandTotal}</h2>
       <Form
         onSubmit={(event) => {

@@ -83,3 +83,30 @@ test("happy order phase", async () => {
   await screen.findByRole("spinbutton", { name: "Vanilla" });
   await screen.findByRole("checkbox", { name: "Cherries" });
 });
+
+test("toppings summary will not appear if no topping selected", async () => {
+  //render app
+  render(<App />);
+
+  //add ice cream scoops and toppings
+  const vanillaSpinButton = await screen.findByRole("spinbutton", {
+    name: "Vanilla",
+  });
+  userEvent.clear(vanillaSpinButton);
+  userEvent.type(vanillaSpinButton, "1");
+
+  //find and click order button
+  const orderbutton = screen.getByRole("button", { name: "Order Sundae!" });
+  userEvent.click(orderbutton);
+
+  //check summary information based on order
+  const scoopsTotalSummary = screen.getByRole("heading", {
+    name: "Scoops: $2.00",
+  });
+  expect(scoopsTotalSummary).toBeInTheDocument();
+
+  const toppingsTotalSummary = screen.queryByRole("heading", {
+    name: /toppings/i,
+  });
+  expect(toppingsTotalSummary).not.toBeInTheDocument();
+});
