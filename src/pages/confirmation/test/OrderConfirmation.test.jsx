@@ -1,6 +1,8 @@
 import { render, screen } from "../../../test-utils/testing-library-utils";
 import OrderConfirmation from "../OrderConfirmation";
 import userEvent from "@testing-library/user-event";
+import { server } from "../../../mocks/server";
+import { rest } from "msw";
 
 test("display loading before server response order number", async () => {
   render(<OrderConfirmation />);
@@ -34,4 +36,17 @@ test("change order phase when click new order button", async () => {
   userEvent.click(newOrderButton);
 
   expect(updateOrderPhase).toBeCalledWith("inProgress");
+});
+
+test("display alert banner if server response error", async () => {
+  server.resetHandlers(
+    rest.post("http://localhost:3030/order", (req, res, ctx) =>
+      res(ctx.status(500))
+    )
+  );
+  render(<OrderConfirmation />);
+  // Wait until the callback does not throw an error. In this case, that means
+  // it'll wait until the mock function has been called once.
+  const alertBanner = await screen.findByRole("alert");
+  expect(alertBanner).toBeInTheDocument();
 });
