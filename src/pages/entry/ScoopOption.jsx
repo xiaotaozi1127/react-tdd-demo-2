@@ -35,7 +35,11 @@ export default function ScoopOption({ name, imagePath, updateItemCount }) {
             defaultValue={0}
             onChange={handleNumberChange}
           />
-          {!validInput && <label>invalid input</label>}
+          {!validInput && (
+            <label style={{ color: "red", backgroundColor: "yellow" }}>
+              invalid input
+            </label>
+          )}
         </Col>
       </Form.Group>
     </Col>

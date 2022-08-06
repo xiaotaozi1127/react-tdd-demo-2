@@ -28,7 +28,7 @@ export default function OrderConfirmation({ updateOrderPhase }) {
       <div style={{ textAlign: "center" }}>
         <h1>Thank you!</h1>
         <p>Your order number is {orderNumber}</p>
-        <p style={{ fontSize: "25%" }}>
+        <p style={{ fontSize: "50%" }}>
           as per our terms and conditions, nothing will happen now.
         </p>
         <button onClick={handleButtonClick}>Create new order</button>

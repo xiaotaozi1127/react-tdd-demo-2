@@ -20,7 +20,7 @@ export default function SummaryForm({ updateOrderPhase }) {
     <span>
       I agree to
       <OverlayTrigger placement="right" overlay={popover}>
-        <span style={{ color: "blue" }}>Terms and Conditions</span>
+        <span style={{ color: "blue" }}> Terms and Conditions</span>
       </OverlayTrigger>
     </span>
   );
@@ -57,7 +57,12 @@ export default function SummaryForm({ updateOrderPhase }) {
             label={checkboxLabel}
           ></Form.Check>
         </Form.Group>
-        <Button variant="primary" disabled={!tcChecked} type="submit">
+        <Button
+          variant="primary"
+          style={{ marginTop: "10px" }}
+          disabled={!tcChecked}
+          type="submit"
+        >
           Confirm order
         </Button>
       </Form>
