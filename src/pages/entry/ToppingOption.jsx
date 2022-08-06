@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 export default function ToppingOption({ name, imagePath, updateItemCount }) {
   const handleChange = (event) => {
     let newItemCount = event.target.checked ? 1 : 0;
-    updateItemCount(name, newItemCount, "toppings");
+    updateItemCount(name, newItemCount, true);
   };
 
   return (

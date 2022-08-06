@@ -53,15 +53,11 @@ export function OrderDetailsProvider(props) {
   }, [optionCounts]);
 
   const value = useMemo(() => {
-    function updateItemCount(itemName, newItemCount, optionType) {
-      let integerValue = parseInt(newItemCount);
-      let floatValue = parseFloat(newItemCount);
-      let isValid = integerValue === floatValue && integerValue >= 0;
-      if (isValid) {
+    function updateItemCount(itemName, newItemCount, optionType, isValid) {
+      if (optionType === "toppings" || isValid) {
         const newOptionCounts = { ...optionCounts };
-
         const optionCountsMap = newOptionCounts[optionType];
-        optionCountsMap.set(itemName, integerValue);
+        optionCountsMap.set(itemName, parseInt(newItemCount));
         newOptionCounts["validInput"] = true;
         setOptionCounts(newOptionCounts);
       } else {

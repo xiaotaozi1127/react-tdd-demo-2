@@ -9,9 +9,9 @@ export default function ScoopOption({ name, imagePath, updateItemCount }) {
   const handleNumberChange = (event) => {
     let integerValue = parseInt(event.target.value);
     let floatValue = parseFloat(event.target.value);
-    let isValid = integerValue === floatValue && integerValue > 0;
+    let isValid = integerValue === floatValue && integerValue >= 0;
     setValidInput(isValid);
-    updateItemCount(name, event.target.value, "scoops");
+    updateItemCount(name, event.target.value, isValid);
   };
 
   return (

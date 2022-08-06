@@ -12,7 +12,7 @@ test("displays image for each scoop from mock server", async () => {
   expect(altText).toEqual(["Chocolate scoop", "Vanilla scoop"]);
 });
 
-test.only("display warning if input invalid number for scoops count", async () => {
+test("display warning if input invalid number for scoops count", async () => {
   render(<Options optionType="scoops" />);
   const vanillaSpinButton = await screen.findByRole("spinbutton", {
     name: "Vanilla",

@@ -105,14 +105,18 @@ test("change orderPhase state when click order button", async () => {
 
 test("button will be disabled if input scoops number is invalid", async () => {
   render(<OrderEntry />);
+  const orderButton = screen.getByRole("button", { name: "Order Sundae!" });
+  expect(orderButton).toBeDisabled();
   const vanillaSpinButton = await screen.findByRole("spinbutton", {
     name: "Vanilla",
   });
   UserEvent.clear(vanillaSpinButton);
   UserEvent.type(vanillaSpinButton, "2.4");
-  const orderButton = screen.getByRole("button", { name: "Order Sundae!" });
-
   expect(orderButton).toBeDisabled();
+
+  UserEvent.clear(vanillaSpinButton);
+  UserEvent.type(vanillaSpinButton, "2");
+  expect(orderButton).toBeEnabled();
 });
 
 test("button will be disabled if no scoops is selected", async () => {
@@ -130,8 +134,5 @@ test("button will be disabled if no scoops is selected", async () => {
   UserEvent.clear(vanillaSpinButton);
   UserEvent.type(vanillaSpinButton, "2");
 
-  const orderButtonAgain = screen.getByRole("button", {
-    name: "Order Sundae!",
-  });
-  expect(orderButtonAgain).toBeEnabled();
+  expect(orderButton).toBeEnabled();
 });
