@@ -12,28 +12,24 @@ test("displays image for each scoop from mock server", async () => {
   expect(altText).toEqual(["Chocolate scoop", "Vanilla scoop"]);
 });
 
-test("display warning if input invalid number for scoops count", async () => {
+test.only("scoops total will not change if input invalid scoops count", async () => {
   render(<Options optionType="scoops" />);
+
   const vanillaSpinButton = await screen.findByRole("spinbutton", {
     name: "Vanilla",
   });
   userEvent.clear(vanillaSpinButton);
-  userEvent.type(vanillaSpinButton, "2.4");
+  userEvent.type(vanillaSpinButton, "-1");
 
-  const warning = screen.getByText("invalid input", { exact: false });
-  expect(warning).toBeInTheDocument();
+  const scoopsTotal = screen.getByText("Scoops total", { exact: false });
+  expect(scoopsTotal).toHaveTextContent("$0.00");
 
-  userEvent.clear(vanillaSpinButton);
-  userEvent.type(vanillaSpinButton, "2");
-
-  const warningAgain = screen.queryByText("invalid input", { exact: false });
-  expect(warningAgain).not.toBeInTheDocument();
-
-  userEvent.clear(vanillaSpinButton);
-  userEvent.type(vanillaSpinButton, "-2");
-
-  const warningCheckAgain = screen.getByText("invalid input", { exact: false });
-  expect(warningCheckAgain).toBeInTheDocument();
+  const chocolateSpinButton = await screen.findByRole("spinbutton", {
+    name: "Chocolate",
+  });
+  userEvent.clear(chocolateSpinButton);
+  userEvent.type(chocolateSpinButton, "3.5");
+  expect(scoopsTotal).toHaveTextContent("$0.00");
 });
 
 test("display images for each topping from mock server", async () => {

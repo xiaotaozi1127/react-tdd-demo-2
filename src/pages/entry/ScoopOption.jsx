@@ -7,15 +7,15 @@ export default function ScoopOption({ name, imagePath, updateItemCount }) {
   const [validInput, setValidInput] = useState(true);
 
   const handleNumberChange = (event) => {
-    let integerValue = parseInt(event.target.value);
-    let floatValue = parseFloat(event.target.value);
-    let isValid = integerValue === floatValue && integerValue >= 0;
+    let targetValue = event.target.value;
+    let floatValue = parseFloat(targetValue);
+    let isValid = Math.floor(floatValue) === floatValue && floatValue >= 0;
     setValidInput(isValid);
-    updateItemCount(name, event.target.value, isValid);
+    updateItemCount(targetValue, isValid);
   };
 
   return (
-    <Col xs={12} sm={6} md={4} style={{ textAlign: "center" }}>
+    <Col xs={12} sm={6} md={4} lg={3} style={{ textAlign: "center" }}>
       <img
         style={{ width: "75%" }}
         src={`http://localhost:3030${imagePath}`}
@@ -34,12 +34,8 @@ export default function ScoopOption({ name, imagePath, updateItemCount }) {
             type="number"
             defaultValue={0}
             onChange={handleNumberChange}
+            isInvalid={!validInput}
           />
-          {!validInput && (
-            <label style={{ color: "red", backgroundColor: "yellow" }}>
-              invalid input
-            </label>
-          )}
         </Col>
       </Form.Group>
     </Col>
