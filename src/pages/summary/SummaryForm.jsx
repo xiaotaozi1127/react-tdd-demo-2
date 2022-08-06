@@ -30,23 +30,26 @@ export default function SummaryForm({ updateOrderPhase }) {
     <li key={key}>{`${value} ${key}`}</li>
   ));
 
-  const toppingsArray = Array.from(orderDetails.toppings);
-  const toppingsOptions = toppingsArray.map(([key, value]) => (
-    <li key={key}>{key}</li>
-  ));
+  let toppingHeadingDisplay = null;
+  if (orderDetails.toppings.size > 0) {
+    const toppingsArray = Array.from(orderDetails.toppings);
+    const toppingsOptions = toppingsArray.map(([key, value]) => (
+      <li key={key}>{key}</li>
+    ));
+    toppingHeadingDisplay = (
+      <>
+        <h2>Toppings: {totals.toppings}</h2>
+        <ul>{toppingsOptions}</ul>
+      </>
+    );
+  }
 
   return (
     <div>
       <h1>Order Summary</h1>
       <h2>Scoops: {totals.scoops}</h2>
       <ul>{scoopsOptions}</ul>
-      {orderDetails.toppings.size > 0 && (
-        <>
-          <h2>Toppings: {totals.toppings}</h2>
-          <ul>{toppingsOptions}</ul>
-        </>
-      )}
-
+      {toppingHeadingDisplay}
       <h2>Total: {totals.grandTotal}</h2>
       <Form
         onSubmit={(event) => {
