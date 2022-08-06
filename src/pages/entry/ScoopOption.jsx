@@ -11,6 +11,7 @@ export default function ScoopOption({ name, imagePath, updateItemCount }) {
     let floatValue = parseFloat(targetValue);
     let isValid = Math.floor(floatValue) === floatValue && floatValue >= 0;
     //when i type 3.5, it will be triggered twice, first time value is 3, second time value is 3.5.
+    //https://github.com/react-bootstrap/react-bootstrap/issues/6423
     console.log("target value=" + targetValue + "; isValid=" + isValid);
     setValidInput(isValid);
     updateItemCount(targetValue, isValid);
