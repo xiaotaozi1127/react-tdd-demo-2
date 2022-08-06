@@ -6,10 +6,12 @@ import { useState } from "react";
 export default function ScoopOption({ name, imagePath, updateItemCount }) {
   const [validInput, setValidInput] = useState(true);
 
-  const handleNumberChange = (event) => {
+  const handleChange = (event) => {
     let targetValue = event.target.value;
     let floatValue = parseFloat(targetValue);
     let isValid = Math.floor(floatValue) === floatValue && floatValue >= 0;
+    //when i type 3.5, it will be triggered twice, first time value is 3, second time value is 3.5.
+    console.log("target value=" + targetValue + "; isValid=" + isValid);
     setValidInput(isValid);
     updateItemCount(targetValue, isValid);
   };
@@ -33,7 +35,7 @@ export default function ScoopOption({ name, imagePath, updateItemCount }) {
           <Form.Control
             type="number"
             defaultValue={0}
-            onChange={handleNumberChange}
+            onChange={handleChange}
             isInvalid={!validInput}
           />
         </Col>
