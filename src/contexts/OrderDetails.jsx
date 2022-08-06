@@ -57,7 +57,12 @@ export function OrderDetailsProvider(props) {
       if (optionType === "toppings" || isValid) {
         const newOptionCounts = { ...optionCounts };
         const optionCountsMap = newOptionCounts[optionType];
-        optionCountsMap.set(itemName, parseInt(newItemCount));
+        if (parseInt(newItemCount) === 0) {
+          optionCountsMap.delete(itemName);
+        } else {
+          optionCountsMap.set(itemName, parseInt(newItemCount));
+        }
+
         newOptionCounts["validInput"] = true;
         setOptionCounts(newOptionCounts);
       } else {

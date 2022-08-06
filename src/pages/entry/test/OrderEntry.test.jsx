@@ -135,4 +135,8 @@ test("button will be disabled if no scoops is selected", async () => {
   UserEvent.type(vanillaSpinButton, "2");
 
   expect(orderButton).toBeEnabled();
+
+  UserEvent.clear(vanillaSpinButton);
+  UserEvent.type(vanillaSpinButton, "0");
+  expect(orderButton).toBeDisabled();
 });
